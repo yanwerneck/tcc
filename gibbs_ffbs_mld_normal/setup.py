@@ -6,11 +6,12 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setuptools.setup(
-    name="tcc",
+setup(
+    name="mld_normal_yan_werneck_tcc",
     version="0.0.1",
     author="Yan Werneck",
     author_email="yan_werneck@yahoo.com.br",
+    url="https://github.com/yanwerneck/tcc",
     description="Dinamic Linear Model With Normal Distribution",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -21,6 +22,6 @@ setuptools.setup(
         "scipy==1.4.1"
     ],
 
-    packages=find_packages(),
+    packages=["mld_normal"],
     python_requires='>=3.6',
 )
