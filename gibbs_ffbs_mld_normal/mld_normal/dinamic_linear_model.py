@@ -11,7 +11,7 @@ class DinamicLinearModel:
         self.m0 = m0
         self.C0 = C0
         self.V = V
-        self.W = V
+        self.W = W
         self.S0 = S0
 
        # fator de desconto
@@ -118,7 +118,7 @@ class DinamicLinearModel:
 
         self.At[0] = np.reshape(self.Rt[0] @ self.F , (self.n,1)) @ np.linalg.inv(self.Qt[0])
 
-        self.mt[0] = self.at[0] + self.At[0] @ self.et[0]
+        self.mt[0] = self.at[0] + self.At[0] * self.et[0]
 
         if self.V is None:
             try:
