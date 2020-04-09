@@ -1,6 +1,4 @@
 import numpy as np
-import pandas
-from scipy.stats import t
 
 
 class DinamicLinearModel:
