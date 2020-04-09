@@ -1,4 +1,4 @@
-from dinamic_linear_model import DinamicLinearModel
+from .dinamic_linear_model import DinamicLinearModel
 import numpy as np
 from scipy import stats
 from tqdm import tqdm
@@ -117,8 +117,8 @@ class GibbsSampler:
     def get_states_sample(self):
         return self.states_samples
     
-    def mean_states_sample(self, offset = 0):
-        self.smoothed_states = np.zeros(shape = N)
+    def get_mean_states_sample(self, offset = 0):
+        self.smoothed_states = np.zeros(shape = self.N)
 
         for i in range(self.N):
             tmp_states = np.zeros(shape = self.max_iterations-offset)

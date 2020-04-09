@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="mld_normal_yan_werneck_tcc",
-    version="0.0.9",
+    version="0.0.12",
     author="Yan Werneck",
     author_email="yan_werneck@yahoo.com.br",
     url="https://github.com/yanwerneck/tcc",
