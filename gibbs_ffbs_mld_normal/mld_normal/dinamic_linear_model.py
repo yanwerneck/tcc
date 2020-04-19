@@ -30,13 +30,13 @@ class DinamicLinearModel:
         self.N = yt.shape[0]
 
         # media da posteriori de mu no tempo t
-        self.mt = np.zeros(shape = (self.N, self.n, 1)) 
+        self.mt = np.zeros(shape = (self.N, self.n)) 
 
         # variancia da posteriori de mu no tempo t
         self.Ct = np.zeros(shape = (self.N, self.n, self.n))
 
         # media da previsao de y um passo a frente
-        self.ft = np.zeros(shape = (self.N, self.r, 1))
+        self.ft = np.zeros(shape = (self.N, self.r))
 
         # variancia da previsao de y um passo a frente
         self.Qt = np.zeros(shape = (self.N, self.r, self.r))
@@ -70,19 +70,7 @@ class DinamicLinearModel:
         self.At = np.zeros(shape = (self.N, self.n, self.r))
 
         # erro da previsao de y no tempo t
-        self.et = np.zeros(shape = (self.N, self.r, 1))
-
-        # vetor de medias do sistema
-        self.ut = np.zeros(shape = (self.N, self.r, 1))
-
-        # vetor de direcao
-        self.bt = np.zeros(shape = (self.N, self.r, 1))
-
-        # vetor de velocidade
-        self.dt = np.zeros(shape = (self.N, self.r, 1))
-
-        # vetor Joao
-        self.jt = np.zeros(shape = (self.N, self.r, 1))
+        self.et = np.zeros(shape = (self.N, self.r))
 
     
     # # treino no tempo zero 
@@ -90,7 +78,7 @@ class DinamicLinearModel:
     def __train_zero_time(self, yt):
         self.__inicial_hyper_parameters(yt)
 
-        self.at[0] = np.reshape(self.G @ self.m0, (self.n,1))
+        self.at[0] = self.G @ self.m0
 
         self.ft[0] = np.transpose(self.F) @ self.at[0]
 
@@ -114,7 +102,7 @@ class DinamicLinearModel:
         if self.V is not None:
             self.Qt[0] = np.transpose(self.F) @ self.Rt[0] @ self.F + self.V
 
-        self.At[0] = np.reshape(self.Rt[0] @ self.F , (self.n,1)) @ np.linalg.inv(self.Qt[0])
+        self.At[0] = (np.transpose(self.F.reshape(self.r, 1)) @ self.Rt[0] @ self.F.reshape(self.r, 1)) @ np.linalg.inv(self.Qt[0])
 
         self.mt[0] = self.at[0] + self.At[0] * self.et[0]
 
@@ -148,7 +136,7 @@ class DinamicLinearModel:
         self.__train_zero_time(self.yt)
 
         for i in range(1, self.N):
-            self.at[i] = np.reshape(self.G @ self.mt[i-1], (self.n,1))
+            self.at[i] = self.G @ self.mt[i-1]
 
             self.ft[i] = np.transpose(self.F) @ self.at[i]
 
@@ -172,7 +160,7 @@ class DinamicLinearModel:
             if self.V is not None:
                 self.Qt[i] = np.transpose(self.F) @ self.Rt[i] @ self.F + self.V
 
-            self.At[i] = np.reshape(self.Rt[i] @ self.F , (self.n,1)) @ np.linalg.inv(self.Qt[i])
+            self.At[i] = (np.transpose(self.F.reshape(self.r, 1)) @ self.Rt[i] @ self.F.reshape(self.r, 1)) @ np.linalg.inv(self.Qt[i])
 
             self.mt[i] = self.at[i] + self.At[i] @ self.et[i]
 
@@ -190,14 +178,6 @@ class DinamicLinearModel:
                 except:
                     self.Ct[i] = self.At[i] * self.V
 
-            self.ut[i] = self.mt[i][0]
-            if self.n >= 2:
-                self.bt[i] = self.mt[i][1]
-            if self.n >= 3:
-                self.dt[i] = self.mt[i][2]
-            if self.n >= 4:
-                self.jt[i] = self.mt[i][3]
-
 
     def __check_paremeters(self):
         if self.W is None and self.delta is None:
@@ -206,9 +186,6 @@ class DinamicLinearModel:
         if self.V is None and self.S0 is None:
             raise Exception("Se `V` é desconhecido, você deve fornecer um valor inicial para a variância estimada, `S0`.")
 
-
-    def get_u(self):
-        return self.ut.reshape(self.N)
     
     def get_m(self):
         return self.mt.reshape(self.N)
