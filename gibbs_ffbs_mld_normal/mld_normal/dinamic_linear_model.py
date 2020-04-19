@@ -120,13 +120,6 @@ class DinamicLinearModel:
             except:
                 self.Ct[0] = self.At[0] * self.V
 
-        self.ut[0] = self.mt[0][0]
-        if self.n >= 2:
-            self.bt[0] = self.mt[0][1]
-        if self.n >= 3:
-            self.dt[0] = self.mt[0][2]
-        if self.n >= 4:
-            self.jt[0] = self.mt[0][3]
 
     def fit(self, yt):
         self.yt = yt
